@@ -51,3 +51,6 @@ permissions:
     deluxetags.updates:
         description: will alert you when an update is available
         default: op
+libraries:
+  - com.zaxxer:HikariCP:7.0.2
+  - redis.clients:jedis:7.1.0
