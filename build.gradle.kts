@@ -23,7 +23,8 @@ repositories {
 dependencies {
     compileOnly("org.spigotmc:spigot-api:1.21.9-R0.1-SNAPSHOT")
     compileOnly("me.clip:placeholderapi:2.11.6")
-
+    compileOnly("com.zaxxer:HikariCP:7.0.2")
+    compileOnly("redis.clients:jedis:7.1.0")
     implementation("com.github.cryptomorin:XSeries:13.4.0")
 }
 

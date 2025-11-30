@@ -339,6 +339,25 @@ public class DeluxeTagsHandler {
         return true;
     }
 
+    /**
+     * Incoming from redis so the permission should have been checked on other server.
+     *
+     * @param uuid the player uuid
+     */
+    public void setSavedTag(@NotNull final UUID uuid) {
+        final String identifier = plugin.getSavedTagIdentifier(uuid.toString());
+        if (identifier == null) {
+            return;
+        }
+
+        final DeluxeTag tag = getTagByIdentifier(identifier);
+        if (tag == null) {
+            return;
+        }
+
+        setPlayerTag(uuid, tag);
+    }
+
     private boolean setDefaultTag(@NotNull final Player player) {
         final DeluxeTag tag = getDefaultTag(player);
         if (tag == null) {

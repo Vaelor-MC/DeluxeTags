@@ -1,5 +1,8 @@
 package me.clip.deluxetags.commands;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -9,6 +12,7 @@ import java.util.stream.Collectors;
 import me.clip.deluxetags.DeluxeTags;
 import me.clip.deluxetags.config.Lang;
 import me.clip.deluxetags.tags.DeluxeTag;
+import me.clip.deluxetags.utils.DatabaseUtils;
 import me.clip.deluxetags.utils.MsgUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -667,10 +671,24 @@ public class TagCommand implements CommandExecutor {
       } else {
         plugin.getLogger().info("Using standard hex colors format: #aaFF00");
       }
-
-      plugin.getPlayerFile().reloadConfig();
-      plugin.getPlayerFile().saveConfig();
-
+      if (!plugin.getCfg().isDatabaseEnabled()) {
+          plugin.getPlayerFile().reloadConfig();
+          plugin.getPlayerFile().saveConfig();
+      } else {
+          try {
+              DatabaseUtils.initConfig(plugin.getCfg().getJDBCURL(),plugin.getCfg().getUsername(),plugin.getCfg().getPassword());
+              try (Connection conn = DatabaseUtils.getINSTANCE().getConnection();
+                   PreparedStatement preparedStatement = conn
+                      .prepareStatement("CREATE TABLE IF NOT EXISTS (" +
+                              "uuid VARCHAR(16)," +
+                              "tag VARCHAR(50)")) {
+                    preparedStatement.execute();
+              }
+          } catch (ClassNotFoundException | SQLException e) {
+              plugin.getLogger().info("Erreur while initializing the database");
+              throw new RuntimeException(e);
+          }
+      }
       plugin.getLangFile().reloadConfig();
       plugin.getLangFile().saveConfig();
       plugin.loadMessages();
