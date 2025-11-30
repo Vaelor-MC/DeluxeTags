@@ -257,7 +257,6 @@ public class DeluxeTags extends JavaPlugin {
             playerFile.saveConfig();
         } else {
             String correctUUID = uuid.replace("-","");
-            RedisUtils.getInstance().publish("deluxetags",uuid);
             getLogger().info(correctUUID);
             try {
                 try (Connection conn = DatabaseUtils.getINSTANCE().getConnection();
@@ -270,7 +269,10 @@ public class DeluxeTags extends JavaPlugin {
                     stmt.setString(3, tagIdentifier);
                     stmt.executeUpdate();
                 }
-            } catch (SQLException e) {
+                Bukkit.getScheduler().runTaskLater(this, () -> {
+                    RedisUtils.getInstance().publish("deluxetags",uuid);
+                },40L);
+                } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
