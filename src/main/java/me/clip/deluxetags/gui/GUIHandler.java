@@ -17,7 +17,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.ItemStack;
 
-public class GUIHandler implements Listener {
+public class    GUIHandler implements Listener {
 
     private final DeluxeTags plugin;
 
@@ -107,23 +107,6 @@ public class GUIHandler implements Listener {
         } else if (slot == 48 || slot == 50) {
             TagGUI.close(p);
             p.closeInventory();
-
-        } else if (slot == 49) {
-            final DeluxeTag tag = plugin.getTagsHandler().getPlayerActiveTag(p);
-            if (tag == null || tag.getDisplayTag(p).isEmpty() || plugin.getTagsHandler().isUsingDefaultTag(p) || plugin.getTagsHandler().isUsingForcedTag(p)) {
-                p.updateInventory();
-                return;
-            }
-
-            TagGUI.close(p);
-            p.closeInventory();
-
-            plugin.getTagsHandler().setPlayerTag(p, plugin.getDummyTag());
-            plugin.removeSavedTag(p.getUniqueId().toString());
-
-            sms(p, Lang.GUI_TAG_DISABLED.getConfigValue(null));
-            p.updateInventory();
-
         } else if (slot == 45) {
             openMenu(p, gui.getPage()-1);
 

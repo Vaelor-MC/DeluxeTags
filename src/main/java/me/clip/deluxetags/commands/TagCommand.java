@@ -679,9 +679,11 @@ public class TagCommand implements CommandExecutor {
               DatabaseUtils.initConfig(plugin.getCfg().getJDBCURL(),plugin.getCfg().getUsername(),plugin.getCfg().getPassword());
               try (Connection conn = DatabaseUtils.getINSTANCE().getConnection();
                    PreparedStatement preparedStatement = conn
-                      .prepareStatement("CREATE TABLE IF NOT EXISTS (" +
-                              "uuid VARCHAR(16)," +
-                              "tag VARCHAR(50)")) {
+                      .prepareStatement("CREATE TABLE IF NOT EXISTS tags" +
+                              "(" +
+                              "uuid VARCHAR(32) PRIMARY KEY NOT NULL," +
+                              "tag VARCHAR(50)" +
+                              ")")) {
                     preparedStatement.execute();
               }
           } catch (ClassNotFoundException | SQLException e) {
